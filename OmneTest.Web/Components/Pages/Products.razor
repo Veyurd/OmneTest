@@ -1,0 +1,89 @@
+﻿@page "/products"
+
+@inject ProductApiClient ProductsApi
+@inject NavigationManager Navigation
+
+<h1>Products</h1>
+
+
+@if (dataLoaded == false)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <button class="ma-3 btn btn-sm btn-primary" @onclick="AddProduct">
+        Add +
+    </button>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in products)
+            {
+                var id = product.Id;
+                <tr>
+                    <td>@product.Id</td>
+                    <td>@product.Name</td>
+                    <td>@product.Price</td>
+                    <td>@product.Description</td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-primary" @onclick="_ => EditProduct(id)">
+                            <i class="bi bi-pencil-square"></i> Edit
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-secondary" @onclick="_ => DeleteProduct(id)">
+                            <i class="bi bi-pencil-square"></i> Delete
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    private bool dataLoaded = false;
+    private List<ProductDto> products = new List<ProductDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshGridAsync();
+        dataLoaded = true;
+    }
+
+    private async Task RefreshGridAsync()
+    {
+        products = await ProductsApi.GetAllProductsAsync();
+    }
+
+    private void EditProduct(int id)
+    {
+        Navigation.NavigateTo($"/products/edit/{id}");
+    }
+
+    private async Task DeleteProduct(int id)
+    {
+        var succeeded = await ProductsApi.DeleteProductAsync(id);
+        if (succeeded)
+        {
+            await RefreshGridAsync();
+        }
+    }
+
+    private void AddProduct()
+    {
+        Navigation.NavigateTo($"/products/add");
+    }
+}
