@@ -33,7 +33,6 @@ namespace OmneTest.Web
 
         public async Task<bool> UpdateProductAsync(ProductDto model, CancellationToken cancellationToken = default)
         {
-            //TODO improve this
             PutProductRequestDto request = new PutProductRequestDto
             {
                 Id = model.Id,

@@ -3,8 +3,6 @@ using Repository.Implementations;
 using Repository.Interfaces;
 using FastEndpoints;
 
-
-
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddFastEndpoints();
 // Add service defaults & Aspire client integrations.
@@ -20,11 +18,11 @@ builder.AddNpgsqlDataSource(connectionName: "OmneDB");
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 
-
 var app = builder.Build();
 app.EnsureDatabase();
 app.UseDefaultExceptionHandler()
    .UseFastEndpoints();
+
 // Configure the HTTP request pipeline.
 app.UseExceptionHandler();
 
@@ -37,5 +35,5 @@ app.MapDefaultEndpoints();
 
 app.Run();
 
-
+//Quick hack to make the Test WebAppFactory target the Api Project without rewriting program.cs to use an actual main method
 public partial class Program { }

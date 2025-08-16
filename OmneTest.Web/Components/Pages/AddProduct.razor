@@ -36,11 +36,13 @@
 
     private async Task HandleValidSubmit()
     {
+        
         var result = await ProductsApi.AddProductAsync(product);
         if (result > 0)
         {
             Navigation.NavigateTo("/products");
         }
+        //Page should handle something bad going on with the API call here
     }
 
     private void Cancel()

@@ -55,7 +55,7 @@ public class ProductApiTests : IClassFixture<ApiIntegrationTestFixture>
     public async Task GetProductById_WithExistingProduct_ShouldReturnCorrectData()
     {
         // Arrange - Insert test product directly
-        var productId = await InsertTestProductAsync("Get Test Product", 15.50m, "Get test description");
+        var productId = await InsertTestProductAsync("Get Test Product", 15.50f, "Get test description");
 
         // Act
         var response = await _client.GetAsync($"/products/{productId}");
@@ -73,6 +73,8 @@ public class ProductApiTests : IClassFixture<ApiIntegrationTestFixture>
             new { Id = productId });
 
         Assert.Equal(dbProduct.Name, payload.Products.First().Name);
+        Assert.Equal(dbProduct.Price, payload.Products.First().Price);
+        Assert.Equal(dbProduct.Description, payload.Products.First().Description);
     }
 
     [Fact]
@@ -80,9 +82,9 @@ public class ProductApiTests : IClassFixture<ApiIntegrationTestFixture>
     {
         // Arrange - Clean table and insert test data
         await CleanupProductTableAsync();
-        await InsertTestProductAsync("Product 1", 10.00m, "Description 1");
-        await InsertTestProductAsync("Product 2", 20.00m, "Description 2");
-        await InsertTestProductAsync("Product 3", 30.00m, "Description 3");
+        await InsertTestProductAsync("Product 1", 10.00f, "Description 1");
+        await InsertTestProductAsync("Product 2", 20.00f, "Description 2");
+        await InsertTestProductAsync("Product 3", 30.00f, "Description 3");
 
         // Act
         var response = await _client.GetAsync("/products");
@@ -103,7 +105,7 @@ public class ProductApiTests : IClassFixture<ApiIntegrationTestFixture>
     public async Task UpdateProduct_ShouldModifyDatabaseRecord()
     {
         // Arrange
-        var originalProductId = await InsertTestProductAsync("Original Product", 25.00m, "Original description");
+        var originalProductId = await InsertTestProductAsync("Original Product", 25.00f, "Original description");
         var updatedProduct = new PutProductRequestDto
         {
             Id = originalProductId,
@@ -132,7 +134,7 @@ public class ProductApiTests : IClassFixture<ApiIntegrationTestFixture>
     public async Task DeleteProduct_ShouldRemoveFromDatabase()
     {
         // Arrange
-        var productId = await InsertTestProductAsync("Delete Me", 99.99m, "Delete test");
+        var productId = await InsertTestProductAsync("Delete Me", 99.99f, "Delete test");
 
         // Act
         var response = await _client.DeleteAsync($"/products/{productId}");
@@ -175,7 +177,7 @@ public class ProductApiTests : IClassFixture<ApiIntegrationTestFixture>
         Assert.Equal(initialProductCount, productCount);
     }
 
-    private async Task<int> InsertTestProductAsync(string name, decimal price, string description)
+    private async Task<int> InsertTestProductAsync(string name, float price, string description)
     {
         const string insertSql = @"
             INSERT INTO Products (Name, Price, Description) 
