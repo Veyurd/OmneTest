@@ -2,6 +2,8 @@
 using FastEndpoints;
 using Dtos.ApiDtos;
 
+
+//Fluent Validators Used, comes bundled with Fast Endpoints Package
 namespace OmneTest.ApiService.Validators
 {
     public class PostProductRequestDtoValidator : Validator<PostProductRequestDto>
