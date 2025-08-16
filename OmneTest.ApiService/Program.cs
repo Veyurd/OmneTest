@@ -19,7 +19,10 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 
 var app = builder.Build();
-app.EnsureDatabase();
+
+//This Ensures the Products Table will be Created if it does not already exist
+app.EnsureDatabaseTable();
+
 app.UseDefaultExceptionHandler()
    .UseFastEndpoints();
 

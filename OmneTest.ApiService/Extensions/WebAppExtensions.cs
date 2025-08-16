@@ -5,7 +5,7 @@ namespace OmneTest.ApiService.Extensions
 {
     public static class WebAppExtensions
     {
-        public static WebApplication EnsureDatabase(this WebApplication app)
+        public static WebApplication EnsureDatabaseTable(this WebApplication app)
         {
             // Resolve the connection from DI
             using var scope = app.Services.CreateScope();
